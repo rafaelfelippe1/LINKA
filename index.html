@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<!-- 
+  ==========================================================================
+  GUIA TUTORIAL FRONT-END COMPLETO — HTML (Linguagem de Marcação e Estrutura)
+  ==========================================================================
+  O HTML é o "esqueleto" do site. Ele usa "tags" (elementos entre < >) para dizer 
+  ao navegador o que é um título, parágrafo, botão, campo de entrada, etc.
+  
+  📖 FUNDAMENTOS DAS TAGS HTML:
+  - Tags de Abertura: <nome_da_tag> (ex: <div>, <p>, <button>)
+  - Tags de Fechamento: </nome_da_tag> (ex: </div>, </p>, </button>)
+  - Conteúdo: O texto ou elementos que ficam ENTRE a abertura e o fechamento.
+  - Atributos: Informações extras dentro da tag de abertura (ex: id="...", class="...", placeholder="...").
+  - Tags Auto-contidas: Não precisam de fechamento (ex: <meta>, <input>, <link>, <br>, <img>).
+  
+  🔗 O TRIÂNGULO FRONT-END — COMO AS 3 LINGUAGENS CONVERSAM:
+  1. HTML cria a estrutura e atribui identificadores únicos (id="...") e grupos (class="...").
+  2. CSS lê essas 'class' e 'id' para dar cores, fontes, margens, layout e efeitos visuais.
+  3. JAVASCRIPT lê essas 'id' e 'class' para ouvir cliques, ler textos digitados e atualizar a tela!
+  
+  💡 GUIA DE ALTERAÇÃO RÁPIDA:
+  - Quer mudar O TEXTO ou a ESTRUTURA? -> Mexa AQUI neste arquivo (index.html).
+  - Quer mudar A COR, TAMANHO, FONTE ou POSIÇÃO? -> Mexa no arquivo style.css.
+  - Quer mudar O COMPORTAMENTO, CÁLCULOS ou AÇÃO DE CLIQUE? -> Mexa no arquivo app.js.
+-->
+
+<!-- lang="pt-BR" avisa leitores de tela e buscadores que o site está em Português do Brasil -->
+<html lang="pt-BR">
+<head>
+    <!-- O <head> contém configurações invisíveis ao usuário, essenciais para o funcionamento do site -->
+    
+    <!-- charset="UTF-8" garante que acentos (ç, á, é, ã) e emojis apareçam corretamente sem quebrar -->
+    <meta charset="UTF-8">
+    
+    <!-- viewport adapta a escala da página para celulares e tablets não exibirem o site minúsculo -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 
+      <title> define o texto da aba do navegador.
+      💡 EXPERIMENTE: Mude o texto abaixo para trocar o nome na aba do seu navegador!
+    -->
+    <title>Compra Fácil — Apoio Didático Front-end</title>
+
+    <!-- Importação de fontes externas direto do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 
+      🔗 CONEXÃO COM CSS: 
+      Esta tag <link> conecta este HTML ao arquivo 'style.css'.
+      É assim que o HTML sabe de onde puxar as cores, o fundo escuro e o design!
+    -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 
+      O <body> (corpo) contém tudo o que é VISÍVEL para o usuário na tela.
+      Usamos a <div> com id="app" como o container principal de todo o projeto.
+    -->
+    <div id="app" class="app-container">
+        
+        <!-- 
+          ==========================================================================
+          TELA 1: TELA DE LOGIN / CÓDIGO DA FAMÍLIA
+          ==========================================================================
+          <section> é uma tag semântica para agrupar seções de conteúdo.
+          
+          📖 SOBRE AS CLASSES 'screen active':
+          - 'screen' é a classe genérica.
+          - 'active' é a classe que indica qual tela está visível no momento.
+          
+          🔗 CONEXÃO TRIÁDICA (HTML ↔ CSS ↔ JS):
+          - CSS em style.css: `.screen { display: none }` esconde por padrão, e `.screen.active { display: flex }` exibe a tela!
+          - JS em app.js: `document.getElementById('screen-login').classList.remove('active')` 
+            esconde esta tela quando o usuário faz login!
+        -->
+        <section id="screen-login" class="screen active">
+            <div class="login-wrapper">
+                
+                <!-- Logo e Nome do Projeto -->
+                <div class="brand-badge">
+                    <!-- 
+                      <span> é uma tag em linha para pequenos trechos de texto ou ícones.
+                      🔗 SE QUISER MUDAR A COR/TAMANHO DO ÍCONE DO CARRINHO:
+                      Procure pela classe `.icon-cart` no arquivo style.css!
+                    -->
+                    <span class="icon-cart">🛒</span>
+                    <span class="brand-title">Compra Fácil</span>
+                </div>
+                
+                <!-- Card (caixa) de Login -->
+                <div class="login-card">
+                    <div class="login-header">
+                        <h2>Entrar na sua família</h2>
+                        <p>Digite o código compartilhado da sua casa para sincronizar a lista e os gastos em tempo real.</p>
+                    </div>
+
+                    <!-- 
+                      <form> representa um formulário de envio de dados.
+                      
+                      🔗 CONEXÃO COM JS:
+                      - onsubmit="handleLogin(event)" avisa o navegador: 
+                        "Quando o usuário clicar em ENTRAR, execute a função handleLogin() que está lá no app.js!"
+                    -->
+                    <form id="form-login" onsubmit="handleLogin(event)">
+                        
+                        <!-- Campo de Input 1: Código da Família -->
+                        <div class="field-group">
+                            <!-- <label> é a etiqueta de texto associada ao campo pelo atributo 'for' -->
+                            <label for="family-code">Código da Família</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🔑</span>
+                                <!-- 
+                                  📖 ATRIBUTOS DO INPUT:
+                                  - type="text": Campo de texto simples.
+                                  - id="family-code": Identificador ÚNICO para o JavaScript encontrar esta caixa.
+                                  - placeholder: Texto fantasma transparente exibido quando está vazio.
+                                  - value="silva2024": O valor inicial pré-preenchido.
+                                  - required: Obriga o preenchimento antes de enviar.
+                                  
+                                  🔗 CONEXÃO TRIÁDICA DESTE INPUT:
+                                  1. HTML: Cria a caixa de entrada.
+                                  2. CSS: Estiliza o fundo escuro, a borda e o brilho usando a classe `.input-with-icon input`.
+                                  3. JS: Lê o texto digitado usando `document.getElementById('family-code').value` no app.js!
+                                  
+                                  💡 EXPERIMENTE: Troque o value="silva2024" por value="minhafamilia" para testar outro código!
+                                -->
+                                <input type="text" id="family-code" placeholder="Ex: silva2024" value="silva2024" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <!-- Campo de Input 2: Nome do Usuário -->
+                        <div class="field-group">
+                            <label for="user-name">Seu Nome / Apelido</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">👤</span>
+                                <!-- 
+                                  🔗 CONEXÃO COM JS: 
+                                  O JS em app.js pega este ID 'user-name' para saber o nome da pessoa 
+                                  e mostrar quem colocou cada item na lista de compras!
+                                -->
+                                <input type="text" id="user-name" placeholder="Ex: Clara, Lucas..." value="Clara" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <!-- 
+                          BOTÃO DE ENTRAR
+                          📖 <button type="submit">: Botão que dispara o envio do formulário (<form>).
+                          
+                          🔗 CONEXÃO COM CSS: 
+                          class="btn-primary btn-block" -> O style.css estiliza com fundo verde (#00b87c), 
+                          texto em negrito, cantos arredondados e efeito hover quando passa o mouse.
+                        -->
+                        <button type="submit" class="btn-primary btn-block">
+                            <span>Acessar Lista da Casa</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </form>
+
+                    <div class="login-footer">
+                        <!-- 
+                          📖 <button type="button"> com evento onclick:
+                          🔗 CONEXÃO COM JS: 
+                          onclick="demoLogin()" -> Chama a função demoLogin() no app.js 
+                          que preenche os campos sozinho e faz o login automático!
+                        -->
+                        <button class="btn-link" onclick="demoLogin()">Ver demonstração rápida →</button>
+                    </div>
+                </div>
+
+                <p class="login-tagline">Organize a lista • Compare preços • Controle gastos</p>
+            </div>
+        </section>
+
+        <!-- 
+          ==========================================================================
+          TELA 2: DASHBOARD / PAINEL PRINCIPAL DO APLICATIVO
+          ==========================================================================
+          Esta tela não tem a classe 'active' inicialmente. Ela fica oculta até o JS ativá-la!
+        -->
+        <section id="screen-dashboard" class="screen">
+            
+            <!-- <header> é a tag semântica para o cabeçalho superior do app -->
+            <header class="app-header">
+                <div class="header-left">
+                    <div class="logo-small">
+                        <span class="logo-icon">🛒</span>
+                        <span class="logo-text">Compra Fácil</span>
+                    </div>
+                    <div class="family-chip">
+                        <span class="status-dot"></span>
+                        <!-- 
+                          🔗 CONEXÃO COM JS:
+                          id="display-family-name" -> O texto dentro deste <span> é alterado pelo app.js 
+                          via `document.getElementById('display-family-name').innerText = ...` com o nome digitado no login!
+                        -->
+                        <span id="display-family-name" class="family-name">Família Silva</span>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <!-- 
+                      🔗 CONEXÃO COM JS: 
+                      id="display-user-avatar" -> O JS coloca a primeira letra do nome do usuário dentro deste círculo (ex: 'C')!
+                    -->
+                    <div class="user-avatar" id="display-user-avatar" title="Conectado">C</div>
+                    
+                    <!-- 
+                      🔗 CONEXÃO COM JS: 
+                      onclick="logout()" -> Chama a função no app.js que volta para a tela de login!
+                    -->
+                    <button class="btn-icon" title="Sair da Família" onclick="logout()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 
+              <nav> é a tag semântica para menús de navegação.
+              
+              🔗 CONEXÃO TRIÁDICA (HTML ↔ CSS ↔ JS):
+              1. HTML cria os botões com `onclick="switchTab('tab-lista')"`.
+              2. JS no app.js ouve o clique e coloca a classe 'nav-tab active' no botão clicado.
+              3. CSS no style.css desenha a linha verde embaixo da aba ativa usando `.nav-tab.active`!
+            -->
+            <nav class="app-nav">
+                <button class="nav-tab active" onclick="switchTab('tab-lista')">
+                    <span class="tab-icon">📝</span>
+                    <span>Lista da Casa</span>
+                    <!-- id="badge-count": O JS calcula a quantidade de itens pendentes e altera o número aqui! -->
+                    <span class="badge" id="badge-count">0</span>
+                </button>
+                <button class="nav-tab" onclick="switchTab('tab-comparador')">
+                    <span class="tab-icon">🏷️</span>
+                    <span>Comparador de Preços</span>
+                </button>
+                <button class="nav-tab" onclick="switchTab('tab-gastos')">
+                    <span class="tab-icon">📊</span>
+                    <span>Gastos do Mês</span>
+                </button>
+            </nav>
+
+            <!-- <main> é a tag semântica para o conteúdo principal da página -->
+            <main class="app-content">
+                
+                <!-- ABA 1: LISTA DA CASA -->
+                <div id="tab-lista" class="tab-content active">
+                    
+                    <!-- Formulário para Adicionar Novo Item -->
+                    <div class="quick-add-card">
+                        <!-- 
+                          🔗 CONEXÃO COM JS: 
+                          onsubmit="addItem(event)" -> Quando clica no botão '+ Adicionar', 
+                          a função `addItem()` no app.js lê os valores digitados nos 3 inputs abaixo!
+                        -->
+                        <form id="form-add-item" onsubmit="addItem(event)">
+                            <div class="quick-add-row">
+                                <!-- id="item-title": Lido pelo JS (Nome do produto) -->
+                                <input type="text" id="item-title" placeholder="O que precisamos comprar? (ex: Café Torrado 500g)" required>
+                                
+                                <!-- 
+                                  📖 <select> cria uma caixa de menu suspenso de seleção.
+                                  <option> representa cada item selecionável.
+                                  id="item-category": Lido pelo JS (Categoria escolhida)
+                                -->
+                                <select id="item-category">
+                                    <option value="Alimentos">Alimentos 🍞</option>
+                                    <option value="Hortifruti">Hortifruti 🍎</option>
+                                    <option value="Limpeza">Limpeza 🧹</option>
+                                    <option value="Higiene">Higiene 🧴</option>
+                                    <option value="Bebidas">Bebidas 🧃</option>
+                                </select>
+                                
+                                <!-- id="item-price": Lido pelo JS (Preço estimado) -->
+                                <input type="number" id="item-price" placeholder="R$ Est." step="0.50" min="0">
+                                
+                                <button type="submit" class="btn-primary btn-add">
+                                    <span>+ Adicionar</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Filtros de Lista e Resumo dos Custos -->
+                    <div class="list-controls">
+                        <div class="filter-pills">
+                            <!-- 
+                              🔗 CONEXÃO COM JS:
+                              onclick="setFilter('all')" -> Altera a visualização para mostrar TODOS os produtos no app.js
+                            -->
+                            <button class="filter-pill active" onclick="setFilter('all')">Todos (<span id="count-all">0</span>)</button>
+                            <button class="filter-pill" onclick="setFilter('pending')">Pendente (<span id="count-pending">0</span>)</button>
+                            <button class="filter-pill" onclick="setFilter('done')">Comprado (<span id="count-done">0</span>)</button>
+                        </div>
+                        <div class="list-summary-chip">
+                            <span>Estimado: </span>
+                            <!-- 
+                              🔗 CONEXÃO COM JS: 
+                              id="total-estimated" -> O JS calcula a soma dos preços de todos os itens e injeta o valor aqui!
+                            -->
+                            <strong id="total-estimated">R$ 0,00</strong>
+                        </div>
+                    </div>
+
+                    <!-- 
+                      📖 CONCEITO CHAVE PARA INICIANTES:
+                      id="items-list" -> Esta caixa <div> começa VAZIA no HTML.
+                      A função `renderItems()` dentro do app.js vai gerar o HTML dos produtos 
+                      dinamicamente e colocar dentro desta <div>!
+                    -->
+                    <div id="items-list" class="items-grid">
+                        <!-- Gerado dinamicamente via app.js -->
+                    </div>
+                </div>
+
+                <!-- ABA 2: COMPARADOR DE PREÇOS -->
+                <div id="tab-comparador" class="tab-content">
+                    <div class="comparator-header">
+                        <div>
+                            <h2>Comparativo entre Supermercados</h2>
+                            <p>Análise calculada com base na lista de compras atual da família.</p>
+                        </div>
+                        <span class="verified-tag">✓ Atualizado hoje</span>
+                    </div>
+
+                    <div class="markets-grid">
+                        <!-- 
+                          🔗 CONEXÃO COM CSS: 
+                          class="market-card best-price" -> A classe 'best-price' adiciona a borda verde em destaque no style.css!
+                        -->
+                        <div class="market-card best-price">
+                            <div class="market-badge">Mais Barato 🏆</div>
+                            <div class="market-info">
+                                <h3>Atacadão da Cidade</h3>
+                                <p class="market-dist">📍 2.4 km de distância</p>
+                            </div>
+                            <div class="market-price">
+                                <span class="currency">R$</span>
+                                <span class="val">94,30</span>
+                            </div>
+                            <div class="market-savings">Economia estimada de <strong>R$ 24,10</strong></div>
+                            <button class="btn-outline btn-block" onclick="alert('Rota enviada para o GPS!')">Ver no Mapa</button>
+                        </div>
+
+                        <div class="market-card">
+                            <div class="market-info">
+                                <h3>Supermercado Carrefour</h3>
+                                <p class="market-dist">📍 1.1 km de distância</p>
+                            </div>
+                            <div class="market-price">
+                                <span class="currency">R$</span>
+                                <span class="val">108,90</span>
+                            </div>
+                            <div class="market-savings neutral">+ R$ 14,60 em relação ao mais barato</div>
+                            <button class="btn-outline btn-block" onclick="alert('Rota enviada para o GPS!')">Ver no Mapa</button>
+                        </div>
+
+                        <div class="market-card">
+                            <div class="market-info">
+                                <h3>Mercado do Bairro (Express)</h3>
+                                <p class="market-dist">📍 300m de distância</p>
+                            </div>
+                            <div class="market-price">
+                                <span class="currency">R$</span>
+                                <span class="val">118,40</span>
+                            </div>
+                            <div class="market-savings warning">+ R$ 24,10 (Mais caro / Conveniência)</div>
+                            <button class="btn-outline btn-block" onclick="alert('Rota enviada para o GPS!')">Ver no Mapa</button>
+                        </div>
+                    </div>
+
+                    <!-- 
+                      📖 ESTRUTURA DE TABELAS HTML (<table>):
+                      - <table>: O container da tabela.
+                      - <thead>: Cabeçalho da tabela.
+                      - <tbody>: Corpo onde ficam os dados.
+                      - <tr> (Table Row): Uma linha da tabela.
+                      - <th> (Table Header): Célula de título do cabeçalho.
+                      - <td> (Table Data): Célula de dado normal.
+                    -->
+                    <div class="detail-table-card">
+                        <h3>Comparativo Item por Item</h3>
+                        <div class="table-wrapper">
+                            <table class="compare-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item da Lista</th>
+                                        <th>Atacadão</th>
+                                        <th>Carrefour</th>
+                                        <th>Mercado Bairro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Arroz Tipo 1 (5kg)</strong></td>
+                                        <!-- class="cheapest" -> Estilizado com fundo verde no style.css -->
+                                        <td class="cheapest">R$ 23,90</td>
+                                        <td>R$ 26,50</td>
+                                        <td>R$ 28,90</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Café Torrado (500g)</strong></td>
+                                        <td class="cheapest">R$ 16,50</td>
+                                        <td>R$ 17,90</td>
+                                        <td>R$ 18,90</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Açúcar Refinado (1kg)</strong></td>
+                                        <td>R$ 4,90</td>
+                                        <td class="cheapest">R$ 4,50</td>
+                                        <td>R$ 5,20</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 3: GASTOS DO MÊS -->
+                <div id="tab-gastos" class="tab-content">
+                    <div class="budget-overview">
+                        
+                        <div class="budget-card main-budget">
+                            <div class="budget-top">
+                                <div>
+                                    <span class="budget-label">Orçamento Familiar do Mês</span>
+                                    <h2>R$ 800,00</h2>
+                                </div>
+                                <div class="month-pill">Setembro / 2026</div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <!-- 
+                                      🔗 CONEXÃO COM CSS & ESTILO EM LINHA (style="..."):
+                                      style="width: 64%;" -> Define a porcentagem de preenchimento da barra!
+                                      💡 EXPERIMENTE: Mude 64% para 95% para ver a barra quase encher na tela!
+                                    -->
+                                    <div class="progress-fill" style="width: 64%;"></div>
+                                </div>
+                                <div class="progress-labels">
+                                    <span>Gasto até agora: <strong>R$ 512,40 (64%)</strong></span>
+                                    <span>Disponível: <strong class="green-text">R$ 287,60</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="members-spending">
+                            <h3>Divisão entre os membros</h3>
+                            <div class="members-grid">
+                                <div class="member-card">
+                                    <div class="member-header">
+                                        <!-- class="avatar avatar-clara" -> Fundo azul definido no style.css -->
+                                        <span class="avatar avatar-clara">C</span>
+                                        <div>
+                                            <strong>Clara</strong>
+                                            <p>3 compras</p>
+                                        </div>
+                                    </div>
+                                    <div class="member-total">R$ 342,90</div>
+                                </div>
+
+                                <div class="member-card">
+                                    <div class="member-header">
+                                        <!-- class="avatar avatar-lucas" -> Fundo amarelo definido no style.css -->
+                                        <span class="avatar avatar-lucas">L</span>
+                                        <div>
+                                            <strong>Lucas</strong>
+                                            <p>2 compras</p>
+                                        </div>
+                                    </div>
+                                    <div class="member-total">R$ 169,50</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="category-breakdown-card">
+                        <h3>Gastos por Categoria</h3>
+                        <div class="category-bars">
+                            <div class="cat-item">
+                                <div class="cat-info">
+                                    <span>🍞 Alimentos & Mercearia</span>
+                                    <strong>R$ 285,40</strong>
+                                </div>
+                                <div class="cat-bar"><div class="cat-fill" style="width: 55%; background: #00B87C;"></div></div>
+                            </div>
+                            <div class="cat-item">
+                                <div class="cat-info">
+                                    <span>🍎 Hortifruti & Feira</span>
+                                    <strong>R$ 112,00</strong>
+                                </div>
+                                <div class="cat-bar"><div class="cat-fill" style="width: 22%; background: #3B82F6;"></div></div>
+                            </div>
+                            <div class="cat-item">
+                                <div class="cat-info">
+                                    <span>🧹 Limpeza & Casa</span>
+                                    <strong>R$ 68,50</strong>
+                                </div>
+                                <div class="cat-bar"><div class="cat-fill" style="width: 14%; background: #F59E0B;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </section>
+
+    </div>
+
+    <!-- 
+      📖 CONCEITO IMPORTANTE:
+      A tag <script src="app.js"></script> carrega o código JavaScript.
+      Colocar no final do <body> garante que todo o HTML já foi desenhado antes do JS tentar interagir com as IDs!
+    -->
+    <script src="app.js"></script>
+</body>
+</html>

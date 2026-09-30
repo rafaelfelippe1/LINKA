@@ -1,0 +1,984 @@
+/* ==========================================================================
+   GUIA TUTORIAL FRONT-END COMPLETO — CSS (Estilização e Design Visual)
+   ==========================================================================
+   O CSS é responsável por transformar o HTML em um aplicativo lindo, 
+   organizado, colorido e moderno.
+   
+   📖 CONCEITOS FUNDAMENTAIS DE CSS PARA INICIANTES:
+   - Seletor: Escolhe quem vai receber estilo (ex: body, .card, #app, input).
+   - Propriedade: O que vai mudar (ex: background-color, color, font-size, margin).
+   - Valor: O novo estado (ex: #00b87c, 16px, center).
+   - Sintaxe Básica:
+       seletor {
+           propriedade: valor;
+       }
+   
+   📖 ANATOMIA DOS SELETORES:
+   - Seletor por TAG (ex: body, h1, button): Aplica para TODAS as tags daquele tipo no HTML.
+   - Seletor por CLASSE (ex: .btn-primary, .item-card): Começa com PONTO. Aplica em qualquer tag com class="...".
+   - Seletor por ID (ex: #app, #screen-login): Começa com JOGO DA VELHA. Aplica na tag única com id="...".
+   
+   🔗 O TRIÂNGULO FRONT-END — COMO O CSS SE CONECTA COM O HTML E JS:
+   1. O HTML cria a estrutura e dá 'class' e 'id'.
+   2. O CSS lê essas 'class' e 'id' para dar cores, layout e estilos.
+   3. O JavaScript adiciona ou remove classes CSS (ex: `.classList.add('active')`) para fazer coisas aparecerem ou sumirem!
+========================================================================== */
+
+/* 
+  1. VARIÁVEIS CSS DE TEMA (:root)
+  Em vez de repetir o código da cor verde (#00b87c) em 50 lugares diferentes, 
+  criamos uma "variável". Se mudarmos a cor aqui em cima, O SITE TODO MUDA DE UMA VEZ!
+  
+  💡 EXPERIMENTE AGORA:
+  Troque o verde `--accent-emerald: #00b87c;` por roxo (`#8b5cf6`) ou azul (`#3b82f6`) 
+  e salve o arquivo para ver a mágica acontecer no seu site!
+*/
+:root {
+    --bg-app: #0d1117;          /* Cor de fundo principal da página (Escuro tipo GitHub) */
+    --bg-surface: #161b22;      /* Cor de fundo dos cards/caixas */
+    --bg-card: #21262d;         /* Cor de fundo de elementos secundários */
+    --bg-input: #0d1117;        /* Cor de fundo dentro dos campos de texto (<input>) */
+    --border-color: #30363d;    /* Cor das bordas finas e discretas */
+    --border-hover: #484f58;    /* Cor da borda quando o mouse passa por cima */
+    
+    --accent-emerald: #00b87c;        /* Cor de destaque verde */
+    --accent-emerald-hover: #009d69;  /* Verde escuro para hover */
+    --accent-emerald-alpha: rgba(0, 184, 124, 0.12); /* Verde transparente para fundos suaves */
+    
+    --text-primary: #f0f6fc;    /* Texto principal claro */
+    --text-secondary: #8b949e;  /* Texto secundário cinza */
+    --text-muted: #6e7681;      /* Texto discreto */
+    
+    --tag-urgent-text: #f85149;  /* Vermelho para alertas ou botão de excluir */
+    
+    /* Arredondamento de cantos (Border Radius) */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-full: 9999px;      /* Deixa os botões totalmente redondos nas pontas */
+    
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35); /* Sombra 3D suave */
+    --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); /* Transição suave para cliques */
+}
+
+/* 
+  2. RESET GLOBAL (*)
+  O seletor '*' seleciona TODOS os elementos do HTML.
+  box-sizing: border-box garante que padding e bordas não quebrem a largura das caixas!
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-main);
+}
+
+/* 📖 ESTILO DO CORPO DA PÁGINA (<body>) */
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    min-height: 100vh; /* vh = viewport height (100vh = 100% da altura da tela) */
+    display: flex;
+    justify-content: center; /* Centraliza na horizontal usando Flexbox */
+    align-items: center;     /* Centraliza na vertical usando Flexbox */
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 📖 CONTAINER DO APLICATIVO (#app ou .app-container) */
+.app-container {
+    width: 100%;
+    max-width: 900px; /* Limita a largura máxima para não ficar esticado demais */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 
+  📖 REGRA RESPONSIVA (@media):
+  Aplica estilos adicionais quando a tela for de computador (maior que 768px de largura).
+*/
+@media (min-width: 768px) {
+    .app-container {
+        min-height: calc(100vh - 40px);
+        margin: 20px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-card);
+        background-color: var(--bg-surface);
+    }
+}
+
+/* 
+  📖 ESTRUTURA DE VISIBILIDADE DAS TELAS:
+  - display: none esconde o elemento completamente da tela.
+  - .screen.active força a tela ativa a aparecer com display: flex!
+  
+  🔗 CONEXÃO COM JS: 
+  O JS altera qual tela tem a classe 'active' para alternar as telas!
+*/
+.screen {
+    display: none;
+    width: 100%;
+    flex: 1;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================================================
+   ESTILOS DA TELA DE LOGIN (.login-card, .login-wrapper)
+   ========================================================================== */
+#screen-login {
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px; /* Espaçamento automático entre os filhos */
+}
+
+.brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-cart {
+    font-size: 2rem;
+    background: var(--accent-emerald-alpha);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.login-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    width: 100%;
+    box-shadow: var(--shadow-card);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.login-header p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.field-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+/* 📖 ESTILIZAÇÃO DOS CAMPOS DE ENTRADA (<input>) */
+.input-with-icon input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px 0 42px; /* 42px à esquerda cria espaço para o ícone */
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+/* 
+  📖 PSEUDO-CLASSE :focus
+  Aplica este estilo quando o usuário clica dentro do campo de texto para digitar!
+*/
+.input-with-icon input:focus {
+    border-color: var(--accent-emerald);
+    box-shadow: 0 0 0 3px var(--accent-emerald-alpha);
+}
+
+/* 📖 ESTILIZAÇÃO DE BOTÕES PRINCIPAIS */
+.btn-primary {
+    background-color: var(--accent-emerald);
+    color: #000;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-md);
+    height: 48px;
+    padding: 0 20px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+/* 
+  📖 PSEUDO-CLASSE :hover
+  Aplica este estilo quando o ponteiro do mouse passa por cima do botão!
+*/
+.btn-primary:hover {
+    background-color: var(--accent-emerald-hover);
+    transform: translateY(-1px); /* Sobe o botão 1px */
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--accent-emerald);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px;
+    transition: var(--transition);
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.login-tagline {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   DASHBOARD & CABEÇALHO SUPERIOR
+   ========================================================================== */
+.app-header {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between; /* Empurra um lado para esquerda e outro para direita */
+    align-items: center;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-small {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.family-chip {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-emerald);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 6px var(--accent-emerald);
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    color: #000;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.btn-icon {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-icon:hover {
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+}
+
+/* 
+  📖 NAVEGAÇÃO DE ABAS
+  🔗 CONEXÃO COM JS:
+  Quando o JS adiciona a classe '.active' no botão da aba, 
+  a regra .nav-tab.active desenha a linha verde embaixo!
+*/
+.app-nav {
+    display: flex;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 16px;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.nav-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+.nav-tab:hover {
+    color: var(--text-primary);
+}
+
+.nav-tab.active {
+    color: var(--accent-emerald);
+    border-bottom-color: var(--accent-emerald);
+}
+
+.badge {
+    background-color: var(--accent-emerald-alpha);
+    color: var(--accent-emerald);
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.app-content {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+    background-color: var(--bg-app);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ==========================================================================
+   LISTA DA CASA E PRODUTOS GERADOS PELO JAVASCRIPT
+   ========================================================================== */
+.quick-add-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.quick-add-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.quick-add-row input[type="text"] {
+    flex: 2;
+    min-width: 200px;
+    height: 42px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.quick-add-row select, .quick-add-row input[type="number"] {
+    flex: 1;
+    min-width: 110px;
+    height: 42px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0 10px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.btn-add {
+    height: 42px;
+    padding: 0 18px;
+    white-space: nowrap;
+}
+
+.list-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.filter-pills {
+    display: flex;
+    gap: 6px;
+}
+
+.filter-pill {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-pill:hover {
+    color: var(--text-primary);
+}
+
+.filter-pill.active {
+    background: var(--accent-emerald-alpha);
+    color: var(--accent-emerald);
+    border-color: var(--accent-emerald);
+}
+
+.list-summary-chip {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: var(--bg-surface);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+}
+
+.list-summary-chip strong {
+    color: var(--text-primary);
+}
+
+.items-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 
+  🔗 CONEXÃO DINÂMICA COM JAVASCRIPT:
+  A classe `.item-card` é aplicada aos elementos criados via JS no app.js!
+*/
+.item-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: var(--transition);
+}
+
+.item-card:hover {
+    border-color: var(--border-hover);
+}
+
+/* 
+  📖 EFEITO DE ITEM COMPRADO:
+  Quando o produto é marcado como comprado no JS, ele ganha a classe .completed.
+  `text-decoration: line-through` risca o texto do produto!
+*/
+.item-card.completed {
+    opacity: 0.6;
+    background-color: var(--bg-app);
+}
+
+.item-card.completed .item-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.item-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.custom-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.item-card.completed .custom-checkbox {
+    background: var(--accent-emerald);
+    border-color: var(--accent-emerald);
+    color: #000;
+}
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.item-meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.meta-category {
+    background: var(--bg-card);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.meta-user {
+    color: var(--text-muted);
+}
+
+.item-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.item-price-tag {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent-emerald);
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px;
+    transition: var(--transition);
+}
+
+.btn-delete:hover {
+    color: var(--tag-urgent-text);
+}
+
+/* ==========================================================================
+   COMPARADOR DE PREÇOS E TABELA
+   ========================================================================== */
+.comparator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.comparator-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.comparator-header p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.verified-tag {
+    background: var(--accent-emerald-alpha);
+    color: var(--accent-emerald);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+}
+
+/* 
+  📖 LAYOUT EM GRID (CSS Grid)
+  `repeat(auto-fit, minmax(240px, 1fr))` calcula a quantidade de colunas sozinho 
+  conforme a largura da tela!
+*/
+.markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.market-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.market-card.best-price {
+    border-color: var(--accent-emerald);
+    box-shadow: 0 0 0 1px var(--accent-emerald);
+}
+
+.market-badge {
+    position: absolute;
+    top: -12px;
+    right: 16px;
+    background: var(--accent-emerald);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+}
+
+.market-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.market-dist {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.market-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.market-price .currency {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.market-price .val {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.market-savings {
+    font-size: 0.8rem;
+    color: var(--accent-emerald);
+}
+
+.market-savings.neutral { color: var(--text-secondary); }
+.market-savings.warning { color: #f97316; }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-outline:hover {
+    background: var(--bg-card);
+    border-color: var(--border-hover);
+}
+
+.detail-table-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
+
+.detail-table-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+}
+
+.compare-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-table td.cheapest {
+    color: var(--accent-emerald);
+    font-weight: 700;
+    background: var(--accent-emerald-alpha);
+}
+
+/* ==========================================================================
+   GASTOS DO MÊS E BARRAS DE PROGRESSO
+   ========================================================================== */
+.budget-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.main-budget {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 24px;
+}
+
+.budget-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.budget-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.budget-top h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+
+.month-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.progress-bar {
+    height: 12px;
+    background: var(--bg-card);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent-emerald);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.green-text { color: var(--accent-emerald); }
+
+.members-spending h3, .category-breakdown-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.member-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.member-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.avatar-clara { background: #3b82f6; color: #fff; }
+.avatar-lucas { background: #f59e0b; color: #000; }
+
+.member-header p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.member-total {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.category-breakdown-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
+
+.category-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cat-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.cat-bar {
+    height: 8px;
+    background: var(--bg-card);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.cat-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+}
